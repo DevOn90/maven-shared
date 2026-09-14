@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<!-- Maven coordinates for the project -->
+	<groupId>com.devon90.lib</groupId>
+	<artifactId>foo</artifactId>
+	<version>1.0.0</version>
+	<packaging>jar</packaging>
+	
+	<!-- Project Information -->
+	<name>foo</name>
+	<description>Shared library foo</description>
+	<url>https://github.com/devon90/libs</url>
+	<licenses>
+		<license>
+		   <name>MIT License</name>
+           <url>https://opensource.org/license/mit</url>
+           <distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+		   <id>devon90</id>
+           <name>Devon90</name>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:https://github.com/devon90/maven-shared.git</connection>
+        <developerConnection>scm:git:https://github.com/devon90/maven-shared.git</developerConnection>
+        <url>https://github.com/devon90/maven-shared</url>
+		<tag/>
+	</scm>
+	<properties>
+		<java.version>17</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+	</properties>
+	<dependencies>
+	   <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>6.1.3</version>
+            <scope>test</scope>
+        </dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+		    <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.16.0</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.6.0</version>
+            </plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.6.0</version>
+				<configuration>
+					<configLocation>config/checkstyle/checkstyle.xml</configLocation>
+					<consoleOutput>true</consoleOutput>
+					<failsOnError>true</failsOnError>
+					<includeTestSourceDirectory>true</includeTestSourceDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>checkstyle</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.10.2.0</version>
+                
+				<executions>
+					<execution>
+						<id>spotbugs</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>
