@@ -1,0 +1,90 @@
+# Orchestration workflow for all CI jobs.
+# This workflow is triggered on push, pull request and manual dispatch.
+name: ci-orchestration
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+    workflow_dispatch:
+
+jobs:
+
+    changes:
+        runs-on: ubuntu-latest
+
+        outputs:
+            matrix: ${{ steps.libraries.outputs.matrix }}
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Detect changed files
+              uses: dorny/paths-filter@v3
+              id: filter
+              with:
+                  list-files: json
+                  filters: |
+                      changed:
+                        - '**'
+
+            - name: Debug changed files
+              run: |
+                  echo "[DEBUG] Changed files: ${{ steps.filter.outputs.changed_files }}"
+
+            - name: Determine libraries
+              id: libraries
+              env: 
+                  CHANGED_FILES: ${{ steps.filter.outputs.changed_files }}
+              run: |
+                  libraries=()
+                  all_libraries=false
+
+                  while IFS= read -r file; do
+                    if [[ "$file" != libs/* ]]; then
+                      all_libraries=true
+                      break
+                    fi
+
+                    library=${file#libs/}
+                    library=${library%%/*}
+
+                    if [[ ! " ${libraries[*]} " =~ " ${library} " ]]; then
+                        libraries+=("$library")
+                    fi
+
+                  done < <(jq -r '.[]' <<< "$CHANGED_FILES")
+
+                  echo "[DEBUG] Libraries: ${libraries[*]}"
+                  echo "[DEBUG] All libraries: $all_libraries"
+
+                  if [[ "$all_libraries" == "true" ]]; then
+                        echo "[DEBUG] Change outside libs/ detected"
+                        
+                        mapfile -t libraries < <(
+                            find libs -mindepth 1 -maxdepth 1 -type d \
+                            -printf '%f\n' | sort
+                        )
+                  fi
+
+                  matrix=$(printf '%s\n' "${libraries[@]}" | jq -R . | jq -sc .)
+
+                  echo "[DEBUG] Matrix: $matrix"
+                  echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+    verify:
+        needs: changes
+        
+        strategy:
+            fail-fast: false
+            matrix:
+                library: ${{fromJSON(needs.changes.outputs.matrix)}}
+
+        uses: ./.github/workflows/ci-verify.yml
+
+        with:
+            library: ${{matrix.library}}
