@@ -6,7 +6,7 @@
 	<!-- Maven coordinates for the project -->
 	<groupId>com.devon90.lib</groupId>
 	<artifactId>foo</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 	
 	<!-- Project Information -->
@@ -100,7 +100,7 @@
 
 		</plugins>
 	</build>
-	
+
 	<distributionManagement>
 		<repository>
 			<id>github</id>
