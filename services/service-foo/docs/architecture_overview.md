@@ -6,24 +6,32 @@ This document provides an overview of the architecture for the Service Foo appli
 
 Service Foo is a reference self-contained service within the application ecosystem.
 
-It serves as a baseline implementation for other services, providing a common set of features and engineering standards, including:
+It serves as a reference implementation for other services and demonstrates a representative set of common backend and infrastructure capabilities, including:
 
 - Java version (e.g. Java 17)
 - Spring Boot
 - Maven
+- REST API
 - Testing
 - Checkstyle
 - SpotBugs
 - CI
 - Logging
-- Configuration
-- Health checks
-- Containerization
-- Application/build versioning
+- Configuration 
+- Containerization (Docker)
+- Application/build versioning (Maven)
+- Database persistence (Postgre 15.x, JPA)
+- Database migrations (Flyway)
+- API documentation (springdoc-openapi)
+- Application monitoring and health checks (Spring Boot Actuator)
+- Database backup (pg_dump)
 
-The reference service intentionally keeps optional infrastructure and integration features out of the baseline so that individual services can add / exchange only the capabilities they require.
+The purpose of Service Foo is to demonstrate **how a typical REST-based Spring Boot microservice can be structured and operated.**
 
-### Maven Included Optinal / Infrastructure features
+Service Foo is not intended to provide a reference implementation for every possible combination of technologies or infrastructure capabilities. Instead, alternative technologies can be introduced in individual services when their specific requirements justify them.
+
+### Maven Dependencies Used by the Reference Service
+
 - Spring Boot Starter
 - Spring Boot Starter Test
 - Spring Boot Starter Web
@@ -33,12 +41,27 @@ The reference service intentionally keeps optional infrastructure and integratio
 - Flyway
 - springdoc-openapi-starter-webmvc-ui
 
-### Maven Exclude Optional / Infrastructure features
-- API (Websockets, gRPC, messaging, etc.)
-- Caching (e.g., Redis)
-- Messaging (e.g., Kafka, RabbitMQ)
-- Security (e.g., OAuth2, JWT)
-- Persistance (e.g., MongoDB, Cassandra)
+These dependencies demonstrate a typical REST-based service with:
+
+- HTTP/REST API endpoints
+- Application/service-layer architecture
+- Relational database persistence
+- Database schema migrations
+- API documentation
+- Health and operational endpoints
+- Automated testing
+
+### Optional / Alternative Infrastructure and Integration Capabilities
+
+The following capabilities are available as alternatives or additional capabilities for services with different requirements:
+
+- **Alternative APIs / protocols** — WebSockets, gRPC, messaging, etc.
+- **Caching** — e.g. Redis
+- **Messaging** — e.g. Kafka, RabbitMQ
+- **Security** — e.g. OAuth2, JWT
+- **Alternative persistence technologies** — e.g. MongoDB, Cassandra
+
+Service Foo does not attempt to demonstrate every possible combination of these capabilities. For example, there is no separate reference service for every combination of REST + Redis, REST + Kafka, gRPC + MongoDB, or WebSockets + OAuth2.
 
 ## Main Components - Microservice Architecture
 ```
@@ -77,34 +100,7 @@ API Client
 └──────────────────────────┘              └────────────────────┘
 ```
 
-```mermaid
-flowchart TB
-    Client[API Client]
-    subgraph Service_Container[Service Container]
-        Controller
-        Service
-        Repository
-        Flyway
-        OpenAPI_Swagger_UI[OpenAPI / Swagger UI]
-        Spring_Boot_Actuator[Spring Boot Actuator]
-    end
-    subgraph PostgreSQL_Container[PostgreSQL Container]
-        PostgreSQL
-        pg_dump
-        backup_sh[backup.sh]
-        cron
-    end
-    subgraph Persistent_Volume[Persistent Volume]
-        DB_LIVE_data[DB LIVE data]
-    end
-    subgraph Backup_Storage[Backup Storage]
-        BACKUP_data[BACKUP data]
-    end
-
-    Client --> Controller
-
-```
-
+### Component Responsibilities
 - **Service Container** → runs the Spring Boot application.
 - **PostgreSQL Container** → runs PostgreSQL and has pg_dump.
 - **Persistent Volume** → contains live PostgreSQL data local to the server.
@@ -118,31 +114,35 @@ flowchart TB
 
 ## Design Principles
 
-The Service Foo application follows several key design principles to ensure maintainability, scalability, and reliability:
+The Service Foo application follows several key design principles to ensure maintainability, reliability, and consistency:
 
-- Code quality (Checkstyle, SpotBugs)
-- Test coverage (Spring Boot Starter Test)
-- API documentation (springdoc-openapi)
-- Database migrations (Flyway)
-- Observability (Spring Boot Actuator)
-- Containerization (Docker)
-- Versioning (Maven)    
+- **Representative reference architecture** — demonstrates a practical REST-based Spring Boot microservice rather than every possible technology combination.
+- **Code quality** — Checkstyle and SpotBugs
+- **Automated testing** — Spring Boot Starter Test
+- **REST API** — Spring Boot Web
+- **API documentation** — springdoc-openapi
+- **Database persistence** — Spring Data JPA with PostgreSQL
+- **Database migrations** — Flyway
+- **Observability** — Spring Boot Actuator
+- **Containerization** — Docker
+- **Application/build versioning** — Maven
+- **Database backup** — scheduled pg_dump backups to external storage
+- **Loose coupling** — service-to-service communication through well-defined APIs
 
 ## Interactions with Other Services
 
-The Service Foo application interacts with other services primarily through RESTful APIs. It exposes endpoints for CRUD operations on its domain entities and consumes APIs from other services as needed. The interactions are designed to be loosely coupled, ensuring that changes in one service have minimal impact on others.
+Service Foo exposes RESTful APIs for clients and other services.
 
-```json
-{
-  "service": "Service Foo",
-  "interactions": [
-    {
-      "type": "REST",
-      "endpoints": [
-        "/api/foo",
-        "/api/foo/{id}"
-      ]
-    }
-  ]
-}
-```
+Example exposed endpoints: (http://localhost:8080) + endpoints
+- GET `/v1/api/foo` ("Retrieve all Foo entities")
+- POST `/v1/api/foo` ("Create a new Foo entity")
+- `/actuator` ("Links to all available actuator endpoints")
+- `/actuator/health` ("Overall health status of the application and its sub-components")
+- `/actuator/health/liveness` ("Checks if the application is alive") 
+- `/actuator/health/readiness` ("Checks if the application is ready to receive traffic") 
+- `/actuator/info` ("Exposes application information")
+- `/actuator/metrics` ("Exposes application metrics")
+- `/v3/api-docs` ("OpenAPI specification in JSON format")
+- `/swagger-ui/index.html` ("Swagger UI for interactive API documentation")
+
+Service interactions should remain loosely coupled so that changes in one service have minimal impact on other services.
