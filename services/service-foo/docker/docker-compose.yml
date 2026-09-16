@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: service-foo-postgres
+    environment:
+      - POSTGRES_DB=service_foo
+      - POSTGRES_USER=service_foo
+      - POSTGRES_PASSWORD=service_foo
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    
+volumes:
+  postgres_data:
