@@ -12,7 +12,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   service-foo:
-    image: service-foo:0.0.0
+    image: service-foo:1.0.0
     container_name: service-foo
     ports:
       - 8080:8080
@@ -37,6 +37,7 @@ services:
       - 24224:24224
     volumes:
       - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
+      - ./fluent-bit/parsers.conf:/fluent-bit/parsers.conf:ro
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -56,6 +57,9 @@ services:
       timeout: 5s
       retries: 10
       start_period: 10s
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
 
 volumes:
   postgres_data:
+  elasticsearch_data:
