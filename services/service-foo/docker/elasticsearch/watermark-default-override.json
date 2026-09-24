@@ -1,0 +1,6 @@
+{
+  "persistent": {
+    "cluster.routing.allocation.disk.watermark.low": null,
+    "cluster.routing.allocation.disk.watermark.low.max_headroom": null
+  }
+}
