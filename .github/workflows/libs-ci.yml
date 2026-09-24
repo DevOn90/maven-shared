@@ -84,7 +84,7 @@ jobs:
             matrix:
                 library: ${{fromJSON(needs.changes.outputs.matrix)}}
 
-        uses: ./.github/workflows/ci-verify.yml
+        uses: ./.github/workflows/libs-verify-ci.yml
 
         with:
             library: ${{matrix.library}}

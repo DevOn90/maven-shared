@@ -33,7 +33,7 @@ jobs:
     verify:
         needs: release-info
 
-        uses: ./.github/workflows/ci-verify.yml
+        uses: ./.github/workflows/libs-verify-ci.yml
 
         with:
             library: ${{ needs.release-info.outputs.library }}
