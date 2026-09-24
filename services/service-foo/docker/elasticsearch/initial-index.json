@@ -1,0 +1,7 @@
+{
+    "aliases": {
+    "service-logs-write": {
+            "is_write_index": true
+        }
+    }
+}
