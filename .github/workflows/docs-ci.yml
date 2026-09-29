@@ -53,7 +53,6 @@ jobs:
                   --verbose
                   --no-progress
                   "./docs/**/*.md"
-                  "!target/**"
                   "./README.md"
                 fail: false                      # does not fail the workflow on link check errors (check the logs for details)
 
