@@ -54,8 +54,8 @@ jobs:
                   --no-progress
                   "./docs/**/*.md"
                   "./README.md"
-                fail: false                      # does not fail the workflow on link check errors (check the logs for details)
-
+                fail: false                # does not fail the workflow on link check errors (check the logs for details)
+                failIfEmpty: false         # does not fail the workflow if no links are found
     mermaid:
         name: Mermaid
         runs-on: ubuntu-latest
