@@ -9,7 +9,22 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v4
-        
+
+            - name: Inspect script
+              shell: bash
+              run: |
+                echo "Inspecting script..."
+                git rev-parse HEAD
+
+                echo "Git Tree"
+                git ls-tree HEAD .github/workflows/scripts/detect_changed_projects.sh
+
+                echo "Filesystem:"
+                ls -l .github/workflows/scripts/detect_changed_projects.sh
+
+                echo "File:"
+                file .github/workflows/scripts/detect_changed_projects.sh
+                    
             - name: Test bash script
               shell: bash
               run: |
