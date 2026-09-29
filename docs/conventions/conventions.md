@@ -1,5 +1,7 @@
+# Conventions
+
 ## Naming Conventions
 
-## Versioning 
+## Versioning
 
 ## Release
