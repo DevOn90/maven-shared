@@ -6,9 +6,15 @@ on:
     push:
         branches:
             - main
+        paths:
+            - 'libs/**'
+            - '.github/workflows/libs-*.yml'
     pull_request:
         branches:
             - main
+        paths:
+            - 'libs/**'
+            - '.github/workflows/libs-*.yml'
     workflow_dispatch:
 
 jobs:
