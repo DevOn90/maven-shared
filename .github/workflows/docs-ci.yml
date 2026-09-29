@@ -52,7 +52,6 @@ jobs:
                 args: |
                   --verbose
                   --no-progress
-                  "failIfEmpty: false"
                   "./docs/**/*.md"
                   "!target/**"
                   "./README.md"
