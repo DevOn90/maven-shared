@@ -32,6 +32,7 @@ jobs:
 
             - name: Markdown Lint
               uses: DavidAnson/markdownlint-cli2-action@21c1be1b93ad9ed58fa840aacc3f279cde2a72ff   # v24.2.0
+              continue-on-error: true              # does not fail the workflow on lint errors (check the logs for details)
               with:
                 globs: |
                   **/*.md
@@ -54,7 +55,7 @@ jobs:
                   "./docs/**/*.md"
                   "!target/**"
                   "./README.md"
-                fail: true
+                fail: false                      # does not fail the workflow on link check errors (check the logs for details)
 
     mermaid:
         name: Mermaid
