@@ -1,0 +1,72 @@
+name: Docs CI
+
+permissions:
+    contents: read
+
+on:
+    push:
+        branches:
+            - main
+        paths: 
+            - 'docs/**'
+            - 'README.md'
+            - '.github/workflows/docs-ci.yml'
+    pull_request:
+        branches:
+            - main
+        paths:
+            - 'docs/**'
+            - 'README.md'
+            - '.github/workflows/docs-ci.yml'
+
+    workflow_dispatch:
+
+jobs:
+    markdown:
+        name: Markdown
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Markdown Lint
+              uses: DavidAnson/markdownlint-cli2-action@21c1be1b93ad9ed58fa840aacc3f279cde2a72ff   # v24.2.0
+              with:
+                globs: |
+                  **/*.md
+                  !target/**
+
+    links:
+        name: Links
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Link Check
+              uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8   # v2.9.0
+              with:
+                args: |
+                  --verbose
+                  --no-progress
+                  "./docs/**/*.md"
+                  "!target/**"
+                  "./README.md"
+                fail: true
+
+    mermaid:
+        name: Mermaid
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Mermaid Lint
+              uses: sgerrand/mermaid-validation-action@31f8eed257dbbbadad3332c83694866903e92b0e  # v0.2.0
+              with:
+                files: |
+                  docs/**/*.md
+                  README.md
