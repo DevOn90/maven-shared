@@ -1,11 +1,7 @@
-name: ci-verify
+name: Library Foo Verify CI
 
 on:
     workflow_call:
-      inputs:
-          library:
-              required: true
-              type: string
 
 jobs:
     verify:
@@ -21,5 +17,5 @@ jobs:
                   distribution: temurin
 
             - name: Build and verify with Maven
-              working-directory: libs/${{inputs.library}}
+              working-directory: libs/lib-foo
               run: ./mvnw clean verify
