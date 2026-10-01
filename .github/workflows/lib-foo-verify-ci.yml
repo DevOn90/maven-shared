@@ -1,4 +1,4 @@
-name: Library Foo Verify CI
+name: CI - Library Foo Verify
 
 on:
     workflow_call:

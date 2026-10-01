@@ -1,4 +1,4 @@
-name: ci-release
+name: Release Libraries
 
 on:
     push:
@@ -33,10 +33,7 @@ jobs:
     verify:
         needs: release-info
 
-        uses: ./.github/workflows/libs-verify-ci.yml
-
-        with:
-            library: ${{ needs.release-info.outputs.library }}
+        uses: ./.github/workflows/lib-foo-verify-ci.yml
 
     publish:
         needs:
